@@ -154,16 +154,16 @@ HarvestX memiliki fitur pantau dan prediksi harga pangan, sehingga para pedagang
 ![Foto entity relationship diagram](https://github.com/user-attachments/assets/622594f5-9160-474a-8d8c-0ee5d1d930cd)
 
 ### **Low-fidelity Wireframe**
-**Halaman Awal**
+**Halaman Awal**  
 ![Foto lowfi home](https://github.com/user-attachments/assets/7eca4c15-1856-4cdb-95c6-b1811e0c2193)
 
-**Halaman Informasi Harga Pangan**
+**Halaman Informasi Harga Pangan**  
 ![Foto lowfi informasi](https://github.com/user-attachments/assets/ef39ce19-23b9-4695-9672-471add095450)
 
-**Halaman Grafik Harga Pangan**
+**Halaman Grafik Harga Pangan**  
 ![Foto lowfi grafik](https://github.com/user-attachments/assets/76416f6f-9528-44bf-ba14-17152209e140)
 
-**Halaman Simulasi Belanja**
+**Halaman Simulasi Belanja**  
 ![Foto lowfi simulasi](https://github.com/user-attachments/assets/174cd14f-1431-446c-91d6-d00a55e63a1d)
 
 ### **Gantt-Chart**
