@@ -137,18 +137,7 @@ HarvestX memiliki fitur pantau dan prediksi harga pangan, sehingga para pedagang
 ![Foto use case diagram](https://github.com/user-attachments/assets/d0180dcb-8b94-4c80-8679-42a5481263cc)
 
 ### **Functional Requirements**
-| FR | Deskripsi |  
-| ------ | ----- |
-|Buka Web App|Sistem menampilkan halaman utama pada user, tidak memerlukan login.|
-|Navigasi|Sistem menyediakan navigasi yang memungkinkan pengguna untuk berpindah antar halaman. Fitur navigasi memiliki tampilan yang mudah dimengerti sehingga tidak membingungkan bagi user.|
-|Menampilkan daftar komoditas|Sistem menampilkan daftar komoditas pertanian yang tersedia dalam database serta informasi tambahan lainya yang ada pada atribut miliki tabel komoditas.|
-|Memilih produk komoditas tertentu|Sistem menyediakan fitur pencarian berdasarkan nama komoditas atau kategori yang memungkinkan pengguna memilih komoditas khusus dari daftar yang ada dan kemudian diarahkan pada halaman untuk informasi yang lebih mendetail.|
-|Menampilkan informasi data historis|Sistem mengambil dan menampilkan data historis harga dari komoditas yang dipilih dan menyajikannya dalam bentuk grafik dua dimensi (x dan y ; waktu dan harga). Sistem memungkinkan pengguna untuk melihat harga pada titik tertentu dan rentang tertentu|
-|Menampilkan harga prediksi|Sistem melakukan perhitungan prediksi harga berdasarkan model analisis data yang memahami pola dari trend data historis dan juga faktor lain seperti cuaca.|
-|Perhitungan Simulasi|Sistem menyediakan fitur yang memungkinkan pengguna menghitung kemungkinan perubahan harga berdasarkan parameter yang telah dipilih oleh user seperti tren pasar,inflasi,lokasi, dsb.|
-|Menampilkan Hasil Simulasi|Simulasi menampilkan hasil simulasi dalam bentuk yang mudah dipahami user.|
-|Response Sistem|Sistem menampilkan pesan sukses jika aksi user terlaksana dan juga sistem tetap menampilkan pesan error jika terjadi kesalahan.|
-
+![Foto functional requirements](https://github.com/user-attachments/assets/c66228a4-c670-4be8-b0a8-c3535841a7d6)
 
 ### **Entity Relationship Diagram**
 ![Foto entity relationship diagram](https://github.com/user-attachments/assets/622594f5-9160-474a-8d8c-0ee5d1d930cd)
