@@ -1,10 +1,10 @@
-import Navbar from "@/components/layout/Navbar";
+import Hero from "./hero/page";
 
 
 export default function Home() {
   return (
     <>
-      <div className="bg-white min-h-screen"></div>
+        <Hero />
     </>
 
   );
