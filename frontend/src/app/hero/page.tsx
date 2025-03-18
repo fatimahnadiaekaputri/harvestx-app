@@ -6,7 +6,7 @@ import { GiWheat } from "react-icons/gi";
 export default function Hero() {
     return (
         <div className="w-full">
-            <section className="bg-white min-h-screen px-10 md:px-20 pt-20">
+            <section className="bg-white min-h-screen px-10 md:px-20 pt-20 md:pt-40">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col md:items-start items-center">
                        <div className="self-start pl-8 md:pl-0">

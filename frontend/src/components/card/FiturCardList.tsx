@@ -42,16 +42,16 @@ export default function FiturCardList() {
   return (
     <div className="w-full">
       {/* Tampilan Grid untuk Desktop */}
-      <div className="hidden md:grid grid-cols-3 gap-8">
+      <div className="hidden lg:grid grid-cols-3 gap-8">
         {dataFitur.map((fitur) => (
           <FiturCard key={fitur._id} fitur={fitur} />
         ))}
       </div>
 
       {/* Tampilan Carousel untuk Mobile */}
-      <div className="md:hidden flex justify-center items-center relative w-full overflow-hidden">
+      <div className="lg:hidden flex justify-center items-center relative w-full overflow-hidden">
       <Carousel 
-  className="w-full max-w-sm"
+  className="w-full max-w-sm md:max-w-md"
   opts={{ align: "center", containScroll: "keepSnaps", loop: false }}
 >
   <CarouselContent>

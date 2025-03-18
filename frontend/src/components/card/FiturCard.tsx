@@ -36,7 +36,7 @@ export default function FiturCard({fitur}: FiturProps) {
     };
 
     return (
-        <div className="h-[400px] w-[270px] sm:h-[450px] sm:w-[320px] pt-10 bg-white rounded-lg shadow border border-[#e8e8e8] flex flex-col items-center gap-2">
+        <div className="h-[400px] w-[270px] md:h-[450px] md:w-[320px] pt-10 bg-white rounded-lg shadow border border-[#e8e8e8] flex flex-col items-center gap-2">
             <div className="h-[153px] w-[180px] border-[#4FAD5B] border-1 rounded-2xl flex justify-center items-center overflow-hidden">
                 <Image width={120} height={120} src={fitur.logo} alt={fitur.title}></Image>
             </div>
