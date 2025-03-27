@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cuaca {
+  id_cuaca     Int      @id @default(autoincrement())
+  id_waktu     Int
+  suhu         Decimal? @db.Decimal(5, 2)
+  curah_hujan  Decimal? @db.Decimal(5, 2)
+  kelembaban   Decimal? @db.Decimal(5, 2)
+  status_cuaca String?  @db.VarChar(50)
+  waktu        waktu    @relation(fields: [id_waktu], references: [id_waktu], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([id_waktu], map: "idx_cuaca_waktu")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model fakta_komoditas {
+  id_fakta         Int       @id @default(autoincrement())
+  id_komoditas     Int
+  id_waktu         Int
+  harga            Decimal?  @db.Decimal(10, 2)
+  jumlah           Decimal?  @db.Decimal(10, 2)
+  harga_forcast    Decimal?  @db.Decimal(10, 2)
+  harga_per_kg_sim Decimal?  @db.Decimal(10, 2)
+  total_harga_sim  Decimal?  @db.Decimal(10, 2)
+  id_lokasi        Int
+  komoditas        komoditas @relation(fields: [id_komoditas], references: [id_komoditas], onDelete: Cascade, onUpdate: NoAction)
+  lokasi           lokasi    @relation(fields: [id_lokasi], references: [id_lokasi], onDelete: Cascade, onUpdate: NoAction)
+  waktu            waktu     @relation(fields: [id_waktu], references: [id_waktu], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([id_lokasi], map: "idx_fakta_komoditas_lokasi")
+  @@index([id_waktu], map: "idx_fakta_komoditas_waktu")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model inflasi {
+  id_inflasi         Int      @id @default(autoincrement())
+  id_waktu           Int
+  indeks_inflasi     Decimal? @db.Decimal(5, 2)
+  persentase_inflasi Decimal? @db.Decimal(5, 2)
+  waktu              waktu    @relation(fields: [id_waktu], references: [id_waktu], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([id_waktu], map: "idx_inflasi_waktu")
+}
+
+model komoditas {
+  id_komoditas    Int               @id @default(autoincrement())
+  nama_komoditas  String            @unique @db.VarChar(255)
+  kategori        String?           @db.VarChar(100)
+  fakta_komoditas fakta_komoditas[]
+}
+
+model lokasi {
+  id_lokasi       Int               @id @default(autoincrement())
+  provinsi        String            @db.VarChar(100)
+  kota            String            @db.VarChar(100)
+  fakta_komoditas fakta_komoditas[]
+
+  @@unique([provinsi, kota])
+}
+
+model waktu {
+  id_waktu        Int               @id @default(autoincrement())
+  tanggal         DateTime          @unique @db.Date
+  tahun           Int
+  bulan           Int
+  hari            Int
+  cuaca           cuaca[]
+  fakta_komoditas fakta_komoditas[]
+  inflasi         inflasi[]
+}

@@ -14,7 +14,7 @@ const Navbar = () => {
         <nav className="bg-white shadow-md px-4 sm:px-6 lg:px-8 border-b border-gray-300">
             <div className="flex justify-between items-center h-20 mx-4 md:mx-16">
                 {/* Logo */}
-                <Link href="#">
+                <Link href="/">
                     <Image src="/Logo.svg" alt="HarvestX Logo" width={120} height={40} />
                 </Link>
 
@@ -26,7 +26,7 @@ const Navbar = () => {
                         <DropdownMenuContent>
                             <DropdownMenuItem><Link href="#">Informasi Harga</Link></DropdownMenuItem>
                             <DropdownMenuItem><Link href="#">Visualisasi Grafis</Link></DropdownMenuItem>
-                            <DropdownMenuItem><Link href="#">Simulasi Belanja</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link href="/simulasi">Simulasi Belanja</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <Link href="#" className="text-black text-lg hover:text-[#4FAD5B] mr-5">Profil</Link>
