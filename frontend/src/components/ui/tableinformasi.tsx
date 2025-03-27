@@ -20,35 +20,35 @@ const TableInformation = () => {
   ]);
 
   return (
-    <div className="bg-green-600 p-4 rounded-lg mt-4 overflow-x-auto">
-      <table className="w-full bg-white rounded-lg overflow-hidden">
-        {/* Table Header */}
-        <thead className="bg-green-700 text-white">
-          <tr>
-            <th className="p-3 text-left">Nama Komoditas</th>
-            <th className="p-3 text-center">Harga*</th>
-            <th className="p-3 text-center">Prediksi**</th>
-            <th className="p-3 text-center">Aksi</th>
+    <div className="bg-[#4FAD5B] p-4 rounded-lg mt-4 overflow-x-auto">
+      <table className="w-full bg-[#4FAD5B] rounded-lg overflow-hidden">
+        {/* Table Header with rounded corners */}
+        <thead className="bg-white text-black rounded-lg">
+          <tr className="rounded-lg">
+            <th className="p-4 h-16 text-left rounded-tl-lg rounded-bl-lg">Nama Komoditas</th>
+            <th className="p-4 h-16 text-center">Harga*</th>
+            <th className="p-4 h-16 text-center">Prediksi**</th>
+            <th className="p-4 h-16 text-center rounded-tr-lg rounded-br-lg">Aksi</th>
           </tr>
         </thead>
 
         {/* Table Body */}
         <tbody>
           {data.map((item, index) => (
-            <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-              <td className="p-3">{item.name}</td>
+            <tr key={index} className={index === data.length - 1 ? "rounded-b-lg" : ""}>
+              <td className="p-4 h-16 text-white">{item.name}</td>
               
               {/* Harga with Trend Icon */}
-              <td className="p-3 text-center flex justify-center items-center gap-1">
+              <td className="p-4 h-16 text-white text-center justify-center items-center gap-1">
                 {item.trend === "up" ? "🔼" : item.trend === "down" ? "🔽" : "➖"}
                 Rp{item.price.toLocaleString()}
               </td>
 
               {/* Prediksi Harga */}
-              <td className="p-3 text-center">Rp{item.prediction.toLocaleString()}</td>
+              <td className="p-4 h-16 text-white text-center">Rp{item.prediction.toLocaleString()}</td>
 
               {/* Action Button */}
-              <td className="p-3 text-center">
+              <td className="p-4 h-16 text-center">
                 <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition">
                   Lihat Grafik
                 </button>
@@ -57,6 +57,7 @@ const TableInformation = () => {
           ))}
         </tbody>
       </table>
+
 
       {/* Table Notes */}
       <p className="text-xs text-white mt-2">
