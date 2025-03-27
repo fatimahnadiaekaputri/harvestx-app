@@ -1,9 +1,15 @@
+"use client"
 import FiturCardList from "@/components/card/FiturCardList"
 import Button from "@/components/ui/CustomButton"
 import Image from "next/image"
+import { useRouter } from "next/navigation";
 import { GiWheat } from "react-icons/gi";
 
 export default function Hero() {
+    const router = useRouter();
+    const toSimulation = () => {
+        router.push('/simulasi');
+    }
     return (
         <div className="w-full">
             <section className="bg-white min-h-screen px-10 md:px-20 pt-20 md:pt-40">
@@ -29,7 +35,7 @@ export default function Hero() {
                             Lakukan simulasi anggaran belanja untuk membantu dalam perancangan kebutuhan harian maupun bulanamu!
                             </p>
                             <div className="pt-10 pb-20 md:pb-0">
-                                <Button text="Coba Simulasi"></Button>
+                                <Button text="Coba Simulasi" onClick={toSimulation}></Button>
                             </div>
                         </div>
                     </div>
@@ -37,9 +43,9 @@ export default function Hero() {
             </section>
             <section className="bg-[#4FAD5B] min-h-screen relative overflow-hidden">
                 <div className="flex flex-col justify-center items-center pt-20 mx-auto">
-                    <text className="text-white text-4xl font-semibold text-center">
+                    <div className="text-white text-4xl font-semibold text-center">
                         Fitur Kami
-                    </text>
+                    </div>
                     <div className="pt-30 pb-50">
                         <FiturCardList />
                     </div>
