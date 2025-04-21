@@ -16,7 +16,7 @@ export default function CounterButton() {
           Tambah
         </button>
       ) : (
-        <div className="flex items-center border-2 border-black rounded-lg px-6 py-3 text-lg font-semibold space-x-4">
+        <div className="flex items-center border-2 border-black rounded-lg lg:px-6 px-2 py-3 text-lg font-semibold lg:space-x-4 space-x-2">
           <button onClick={() => setCount(count - 1)}
           >
             <LuCircleMinus size={40} strokeWidth={1}/>

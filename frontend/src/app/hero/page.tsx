@@ -19,7 +19,8 @@ export default function Hero() {
                          <Image src="/ornament/icon_daun.png" alt="icon daun" width={60} height={60}></Image>
                        </div>
                        <div className="justify-center h-16 md:mx-10 mx-2">
-                         <Image src="/ornament/komoditas.png" alt="ilustrasi komoditas" width={400} height={400}></Image>
+                         <Image src="/ornament/komoditas.png" alt="ilustrasi komoditas" width={0} height={0} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 80vw" 
+                                className="w-[80vw] sm:w-[30vw] h-auto"></Image>
                        </div>
                     </div>
                     <div className="pt-[280px] md:pt-10 md:mr-10 mx-auto">
@@ -32,7 +33,7 @@ export default function Hero() {
                         <div className="flex flex-col items-center md:items-end pt-10">
                             <p className="text-black text-lg sm:text-xl text-center md:text-end max-w-[500px]">
                             Menyediakan informasi dan prediksi harga pangan yang dapat kamu pantau setiap harinya. 
-                            Lakukan simulasi anggaran belanja untuk membantu dalam perancangan kebutuhan harian maupun bulanamu!
+                            Lakukan simulasi anggaran belanja untuk membantu dalam perancangan kebutuhan harian maupun bulananmu!
                             </p>
                             <div className="pt-10 pb-20 md:pb-0">
                                 <Button text="Coba Simulasi" onClick={toSimulation}></Button>

@@ -7,11 +7,11 @@ interface CommodityCardProps {
 
 const CommodityCard: React.FC<CommodityCardProps> = ({ commodity }) => {
     return (
-      <div className="flex items-center justify-right gap-10 border-2 border-black rounded-lg p-4 bg-white shadow-md w-[10vh]] h-[127px] px-10">
+      <div className="flex items-center justify-right gap-10 border-2 border-black rounded-lg p-4 bg-white shadow-md w-[10vh]] h-[127px] lg:px-10 px-5">
         <CounterButton />
         <div className="flex items-center gap-2">
           <span className="text-2xl">{commodity.icon}</span>
-          <span className="text-2xl font-semibold">{commodity.name}</span>
+          <span className="text-2xl font-semibold">{commodity.nama_komoditas}</span>
         </div>
       </div>
     );

@@ -15,7 +15,7 @@ export default function Simulation() {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="flex text-center font-semibold text-5xl text-black justify-center mt-10">
+            <div className="flex text-center font-semibold text-4xl text-black justify-center mt-10">
                 Simulasi Anggaran Belanja
             </div>
             <div className="mt-10 mx-20">
@@ -26,7 +26,7 @@ export default function Simulation() {
                 <div className="mt-10 text-2xl text-black font-medium">
                 Pilih Waktu, Wilayah, dan Jenis Pasar
                 </div>
-                <div className="flex flex-row gap-5 mt-5">
+                <div className="flex lg:flex-row flex-col gap-5 mt-5">
                     <div className="w-[250px]">
                         <InputTanggal date={selectedDate} setDate={setSelectedDate} />
                     </div>
@@ -41,8 +41,11 @@ export default function Simulation() {
                         <Button text="Coba Simulasi" className="w-60 h-15 items-center justify-center text-2xl font-semibold"/>
                 </div>
             </div>
-            <div className="pt-10 mx-10 pb-10">
-            <TableSimulation />
+            <div className="pt-10 mx-20 pb-10">
+                <div className="text-black font-medium text-2xl mb-5">
+                    Rincian Hasil Simulasi Anggaran Belanja
+                </div>
+                <TableSimulation />
             </div>
         </div>
 

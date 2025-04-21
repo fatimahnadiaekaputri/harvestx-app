@@ -1,23 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Commodity } from "../commodity/commodity"
+import { useEffect, useState } from "react";
+import { fetchAndMapKomoditas } from "../commodity/mapIconCommodity";
 import CommodityCard from "./CommodityCard";
 
 export default function CommodityList() {
-    const [commodities, setCommodities] = useState<Commodity[]>([]);
+    const [commodities, setCommodities] = useState([]);
 
     useEffect(() => {
-        fetch("/commodities.json")
-            .then((res) => res.json())
-            .then((data) => setCommodities(data));
+        fetchAndMapKomoditas().then(setCommodities);
     }, []);
+
     return (
         <div className="bg-green-500 p-8 rounded-lg">
-            <div className="grid grid-cols-2 gap-4">
-                {commodities.map((commodity, index) =>(
-                <CommodityCard key={index} commodity={commodity} />
-            ))}
+            <div className="max-h-[400px] overflow-y-auto pr-2">
+                <div className="grid lg:grid-cols-2 gap-4">
+                    {commodities.map((commodity, index) => (
+                        <CommodityCard key={index} commodity={commodity} />
+                    ))}
+                </div>
             </div>
             <div className="text-left pt-5 text-white text-lg">
                 Dipilih: Beras Kualitas Bawah I, Cabai Merah Besar
@@ -26,5 +27,5 @@ export default function CommodityList() {
                 *dalam kg
            </div>       
         </div>
-    )
+    );
 }

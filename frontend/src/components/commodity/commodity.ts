@@ -1,5 +1,6 @@
 export interface Commodity {
-    name: string;
+    id_komoditas: number;
+    nama_komoditas: string;
     icon: string;
     price: number;
     quantity: number;

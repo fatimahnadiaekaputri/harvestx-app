@@ -19,7 +19,7 @@ export default function FiturCardList() {
       icon: "MdInfo",
       title: "Informasi Harga",
       description: "Prediksi dan informasi harga pangan berbasis AI",
-      route: "",
+      route: "/informasi",
     },
     {
       _id: "2",
@@ -27,7 +27,7 @@ export default function FiturCardList() {
       icon: "TbGraphFilled",
       title: "Visualisasi Grafik",
       description: "Grafik interaktif untuk tampilan data yang informatif",
-      route: "",
+      route: "/grafik",
     },
     {
       _id: "3",
@@ -35,7 +35,7 @@ export default function FiturCardList() {
       icon: "RiShoppingBag4Fill",
       title: "Simulasi Belanja",
       description: "Perkirakan belanja dengan harga prediksi",
-      route: "",
+      route: "/simulasi",
     },
   ]
 
