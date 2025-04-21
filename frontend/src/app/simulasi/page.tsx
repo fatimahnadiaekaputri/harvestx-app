@@ -41,8 +41,11 @@ export default function Simulation() {
                         <Button text="Coba Simulasi" className="w-60 h-15 items-center justify-center text-2xl font-semibold"/>
                 </div>
             </div>
-            <div className="pt-10 mx-10 pb-10">
-            <TableSimulation />
+            <div className="pt-10 mx-20 pb-10">
+                <div className="text-black font-medium text-2xl mb-5">
+                    Rincian Hasil Simulasi Anggaran Belanja
+                </div>
+                <TableSimulation />
             </div>
         </div>
 

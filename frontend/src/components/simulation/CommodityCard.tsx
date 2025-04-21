@@ -11,7 +11,7 @@ const CommodityCard: React.FC<CommodityCardProps> = ({ commodity }) => {
         <CounterButton />
         <div className="flex items-center gap-2">
           <span className="text-2xl">{commodity.icon}</span>
-          <span className="text-2xl font-semibold">{commodity.name}</span>
+          <span className="text-2xl font-semibold">{commodity.nama_komoditas}</span>
         </div>
       </div>
     );

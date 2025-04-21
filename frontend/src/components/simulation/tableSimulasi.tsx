@@ -4,8 +4,8 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 
 export default function TableSimulation () {
     const data: Commodity[] = [
-        {name: "Beras Kualitas Bawah I", price: 13800, icon: "🌾", quantity: 1, total: 13800, trend: "up"},
-        {name: "Cabai Merah Besar", price: 53800, icon: "🌶️", quantity: 1, total: 53800, trend: "down" }
+        {id_komoditas: 1, nama_komoditas: "Beras Kualitas Bawah I", price: 13800, icon: "🌾", quantity: 1, total: 13800, trend: "up"},
+        {id_komoditas: 2, nama_komoditas: "Cabai Merah Besar", price: 53800, icon: "🌶️", quantity: 1, total: 53800, trend: "down" }
     ]
 
     const totalBelanja: number = data.reduce((acc, item) => acc + item.total, 0);
@@ -15,17 +15,17 @@ export default function TableSimulation () {
             <Table className="text-white">
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="p-4 font-bold text-black bg-white rounded-l-lg">Nama Komoditas</TableHead>
-                        <TableHead className="p-4 font-bold text-black bg-white">Harga*</TableHead>
-                        <TableHead className="p-4 font-bold text-black bg-white">Jumlah</TableHead>
-                        <TableHead className="p-4 font-bold text-black bg-white rounded-r-lg">Total</TableHead>
+                        <TableHead className="p-4 font-bold text-black text-2xl bg-white rounded-l-lg">Nama Komoditas</TableHead>
+                        <TableHead className="p-4 font-bold text-black text-2xl bg-white">Harga*</TableHead>
+                        <TableHead className="p-4 font-bold text-black text-2xl bg-white">Jumlah</TableHead>
+                        <TableHead className="p-4 font-bold text-black text-2xl bg-white rounded-r-lg">Total</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.map((item, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={index} className="text-lg border-none">
                             <TableCell className="p-4">
-                                {item.icon} {item.name}
+                                {item.icon} {item.nama_komoditas}
                             </TableCell>
                             <TableCell className="p-4">
                                 {item.trend === "up" ? "🔼" : "🔽"} Rp{item.price.toLocaleString()}
@@ -35,10 +35,10 @@ export default function TableSimulation () {
                         </TableRow>
                     ))}
                 </TableBody>
-                <TableFooter>
+                <TableFooter className="border-none">
                     <TableRow>
-                        <TableCell colSpan={3} className="p-4 font-bold text-lg">Total Belanja</TableCell>
-                        <TableCell className="p-4 bg-white text-black font-bold text-lg rounded-r-lg">
+                        <TableCell colSpan={3} className="p-4 font-bold text-lg bg-[#4FAD5B]">Total Belanja</TableCell>
+                        <TableCell className="p-4 bg-white text-black font-bold text-xl rounded-lg text-center">
                             Rp{totalBelanja.toLocaleString()}
                         </TableCell>
                     </TableRow>

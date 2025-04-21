@@ -20,12 +20,12 @@ const Navbar = () => {
 
                 {/* Menu Desktop */}
                 <div className="hidden lg:flex flex-grow space-x-20 justify-end">
-                    <Link href="#" className="text-black text-lg hover:text-[#4FAD5B]">Beranda</Link>
+                    <Link href="/" className="text-black text-lg hover:text-[#4FAD5B]">Beranda</Link>
                     <DropdownMenu>
                         <DropdownMenuTrigger className="text-black text-lg hover:text-[#4FAD58]">Fitur Kami</DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem><Link href="#">Informasi Harga</Link></DropdownMenuItem>
-                            <DropdownMenuItem><Link href="#">Visualisasi Grafis</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link href="/informasi">Informasi Harga</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link href="/grafik">Visualisasi Grafis</Link></DropdownMenuItem>
                             <DropdownMenuItem><Link href="/simulasi">Simulasi Belanja</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
