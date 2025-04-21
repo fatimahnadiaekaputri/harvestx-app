@@ -13,10 +13,12 @@ export default function CommodityList() {
 
     return (
         <div className="bg-green-500 p-8 rounded-lg">
-            <div className="grid grid-cols-2 gap-4">
-                {commodities.map((commodity, index) => (
-                    <CommodityCard key={index} commodity={commodity} />
-                ))}
+            <div className="max-h-[400px] overflow-y-auto pr-2">
+                <div className="grid lg:grid-cols-2 gap-4">
+                    {commodities.map((commodity, index) => (
+                        <CommodityCard key={index} commodity={commodity} />
+                    ))}
+                </div>
             </div>
             <div className="text-left pt-5 text-white text-lg">
                 Dipilih: Beras Kualitas Bawah I, Cabai Merah Besar

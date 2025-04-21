@@ -14,7 +14,7 @@ export default function TableSimulation () {
         <div className="bg-[#4FAD5B] p-4 rounded-lg text-white">
             <Table className="text-white">
                 <TableHeader>
-                    <TableRow>
+                    <TableRow className="border-none">
                         <TableHead className="p-4 font-bold text-black text-2xl bg-white rounded-l-lg">Nama Komoditas</TableHead>
                         <TableHead className="p-4 font-bold text-black text-2xl bg-white">Harga*</TableHead>
                         <TableHead className="p-4 font-bold text-black text-2xl bg-white">Jumlah</TableHead>
