@@ -18,7 +18,7 @@ export default function Simulation() {
             <div className="flex text-center font-semibold text-4xl text-black justify-center mt-10">
                 Simulasi Anggaran Belanja
             </div>
-            <div className="mt-10 mx-20">
+            <div className="mt-10 lg:mx-20 mx-8">
                 <div className="text-2xl text-black font-medium mb-5">
                     Pilih Komoditas
                 </div>
@@ -41,7 +41,7 @@ export default function Simulation() {
                         <Button text="Coba Simulasi" className="w-60 h-15 items-center justify-center text-2xl font-semibold"/>
                 </div>
             </div>
-            <div className="pt-10 mx-20 pb-10">
+            <div className="pt-10 lg:mx-20 mx-8 pb-10">
                 <div className="text-black font-medium text-2xl mb-5">
                     Rincian Hasil Simulasi Anggaran Belanja
                 </div>
