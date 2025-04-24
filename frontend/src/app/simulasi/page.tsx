@@ -15,11 +15,11 @@ export default function Simulation() {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="flex text-center font-semibold text-4xl text-black justify-center mt-10">
+            <div className="flex text-center font-semibold lg:text-4xl md:text-3xl text-2xl text-black justify-center mt-10">
                 Simulasi Anggaran Belanja
             </div>
             <div className="mt-10 lg:mx-20 mx-8">
-                <div className="text-2xl text-black font-medium mb-5">
+                <div className="lg:text-2xl md:text-xl text-lg text-black font-medium mb-5">
                     Pilih Komoditas
                 </div>
                 <CommodityList />
