@@ -35,10 +35,10 @@ export default function CommodityList() {
                     ))}
                 </div>
             </div>
-            <div className="text-left pt-5 text-white text-lg">
+            <div className="text-left pt-5 text-white md:text-lg text-sm">
                 {selectedText ? `Dipilih: ${selectedText}` : "Belum ada komoditas yang dipilih"}
            </div>
-           <div className="font-light italic justify-end text-right pt-5 text-white">
+           <div className="font-light italic justify-end text-right pt-5 text-white md:text-lg text-xs">
                 *dalam kg
            </div>       
         </div>

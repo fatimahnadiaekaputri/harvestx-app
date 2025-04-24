@@ -5,7 +5,6 @@ import Button from "@/components/ui/CustomButton";
 import InputPasar from "@/components/ui/inputPasar";
 import InputTanggal from "@/components/ui/inputTanggal";
 import InputWilayah from "@/components/ui/inputWilayah";
-import TableInformation from "@/components/ui/tableinformasi";
 import { useState } from "react";
 
 export default function Simulation() {
@@ -23,7 +22,7 @@ export default function Simulation() {
                     Pilih Komoditas
                 </div>
                 <CommodityList />
-                <div className="mt-10 text-2xl text-black font-medium">
+                <div className="mt-10 lg:text-2xl md:text-xl text-lg text-black font-medium">
                 Pilih Waktu, Wilayah, dan Jenis Pasar
                 </div>
                 <div className="flex lg:flex-row flex-col gap-5 mt-5">
@@ -38,11 +37,11 @@ export default function Simulation() {
                     </div>
                 </div>
                 <div className="flex mt-10 justify-end">
-                        <Button text="Coba Simulasi" className="w-60 h-15 items-center justify-center text-2xl font-semibold"/>
+                        <Button text="Coba Simulasi" className="md:w-60 md:h-15 w-40 h-10 items-center justify-center md:text-2xl text-lg font-semibold"/>
                 </div>
             </div>
             <div className="pt-10 lg:mx-20 mx-8 pb-10">
-                <div className="text-black font-medium text-2xl mb-5">
+                <div className="text-black font-medium lg:text-2xl md:text-xl text-l mb-5">
                     Rincian Hasil Simulasi Anggaran Belanja
                 </div>
                 <TableSimulation />
