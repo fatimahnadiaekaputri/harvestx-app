@@ -3,7 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const {id_komoditas, id_waktu, kota, jenis_pasar} = body;
+    let {id_komoditas, id_waktu, kota, jenis_pasar} = body;
+
+    console.log("Body yang diterima:", body);
+    console.log("id_komoditas:", id_komoditas);
+    console.log("id_waktu:", id_waktu);
+    console.log("kota:", kota);
+    console.log("jenis_pasar:", jenis_pasar);
+
 
     if(!id_komoditas?.length || !id_waktu || !kota || !jenis_pasar) {
         return NextResponse.json({error: "Pilih waktu, wilayah, atau jenis pasar"}, {status:400}) 

@@ -1,13 +1,11 @@
 import { Commodity } from "../commodity/commodity";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table";
 
+interface TableSimulationProps {
+    data: Commodity[];
+}
 
-export default function TableSimulation () {
-    const data: Commodity[] = [
-        {id_komoditas: 1, nama_komoditas: "Beras Kualitas Bawah I", price: 13800, icon: "🌾", quantity: 1, total: 13800, trend: "up"},
-        {id_komoditas: 2, nama_komoditas: "Cabai Merah Besar", price: 53800, icon: "🌶️", quantity: 1, total: 53800, trend: "down" }
-    ]
-
+export default function TableSimulation ({data}: TableSimulationProps) {
     const totalBelanja: number = data.reduce((acc, item) => acc + item.total, 0);
 
     return (

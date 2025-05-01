@@ -3,28 +3,45 @@
 import { useEffect, useState } from "react";
 import { fetchAndMapKomoditas } from "../commodity/mapIconCommodity";
 import CommodityCard from "./CommodityCard";
+import { Commodity } from "../commodity/commodity";
 
-export default function CommodityList() {
-    const [commodities, setCommodities] = useState([]);
-    const [selectedCommodities, setSelectedComodities] = useState<{[key:string]: number}>({});
+interface CommodityListProps {
+    onChange: (selected: Commodity[]) => void;
+}
+
+export default function CommodityList({onChange}: CommodityListProps) {
+    const [commodities, setCommodities] = useState<Commodity[]>([]);
+    const [quantities, setQuantities] = useState<Record<number, number>>({});
 
     useEffect(() => {
         fetchAndMapKomoditas().then(setCommodities);
     }, []);
 
-    const handleQuantityChange = (name: string, quantity: number) => {
-        setSelectedComodities((prev) => {
-            const updated = {...prev};
-            if (quantity > 0) {
-                updated[name] = quantity;
-            } else {
-                delete updated[name];
-            }
-            return updated;
-        });
+    useEffect(() => {
+        const selected = commodities
+            .filter((c) => quantities[c.id_komoditas] > 0)
+            .map((c) => ({
+                ...c,
+                quantity: quantities[c.id_komoditas],
+                total: 0,
+            }));
+
+        onChange(selected);
+    }, [quantities, commodities]);
+
+    console.log(commodities);
+
+    const handleQuantityChange = (id: number, quantity: number) => {
+        setQuantities((prev) => ({
+            ...prev,
+            [id]: quantity,
+        }));
     };
 
-    const selectedText = Object.keys(selectedCommodities).join(", ");
+    const selectedText = commodities
+        .filter((c) => quantities[c.id_komoditas] > 0)
+        .map((c) => c.nama_komoditas)
+        .join(", ");
 
     return (
         <div className="bg-green-500 p-8 rounded-lg">
