@@ -61,9 +61,8 @@ model lokasi {
   id_lokasi       Int               @id @default(autoincrement())
   provinsi        String            @db.VarChar(100)
   kota            String            @db.VarChar(100)
+  jenis_pasar     String?           @db.VarChar(100)
   fakta_komoditas fakta_komoditas[]
-
-  @@unique([provinsi, kota])
 }
 
 model waktu {
