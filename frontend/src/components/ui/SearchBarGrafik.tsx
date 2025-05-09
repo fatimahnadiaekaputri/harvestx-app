@@ -1,42 +1,40 @@
 "use client";
 import { useState } from "react";
 import SearchBox from "@/components/ui/SearchBox";
-import InputTanggalRange from "@/components/ui/inputTanggalRange";
-import CommoditySelector from "@/components/ui/inputKomoditas";
+import InputKomoditasGrafik from "./inputKomoditasGrafik";
 import RegionSelector from "@/components/ui/inputWilayah";
 import MarketTypeSelector from "@/components/ui/inputPasar";
+import InputTanggalDari from "@/components/ui/inputTanggalDari";
+import InputTanggalSampai from "@/components/ui/inputTanggalSampai";
 
 const SearchBarGrafik = () => {
   const [search, setSearch] = useState("");
+  const [commodity, setCommodity] = useState("Beras");
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
-  const [commodity, setCommodity] = useState("Beras");
   const [region, setRegion] = useState("Kota Yogyakarta");
   const [marketType, setMarketType] = useState("Pasar Tradisional");
 
   return (
-    <div className="h-[220px] bg-[#4FAD5B] rounded-lg flex p-6 shadow-lg">
-      
-      <SearchBox search={search} setSearch={setSearch} />
-
-      {/* Other Inputs */}
-      <div className="w-1/2 grid grid-cols-2 gap-4">
-        {/* Baris 1 - Input Tanggal */}
-        <div className="col-span-2">
-          <InputTanggalRange
-            startDate={startDate}
-            endDate={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-          />
+    <div className="bg-[#4FAD5B] rounded-lg p-6 shadow-lg max-w-[1000px] mx-auto">
+      {/* Wrapper untuk isi */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        {/* SearchBox */}
+        <div className="md:w-1/2">
+          <InputKomoditasGrafik commodity={commodity} setCommodity={setCommodity} />
         </div>
 
-        {/* Baris 2 - Komoditas & Wilayah */}
-        <CommoditySelector commodity={commodity} setCommodity={setCommodity} />
+        {/* Input */}
+        <div className="px-6 md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <InputTanggalDari date={startDate} setDate={setStartDate} />
+        <InputTanggalSampai date={endDate} setDate={setEndDate} />
         <RegionSelector region={region} setRegion={setRegion} />
-
-        {/* Baris 3 - Jenis Pasar & Tombol */}
         <MarketTypeSelector marketType={marketType} setMarketType={setMarketType} />
+        </div>
+      </div>
+
+      {/* Button */}
+      <div className="px-6 flex justify-end mt-4">
         <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition">
           Lihat Grafik
         </button>
