@@ -5,7 +5,7 @@ interface SearchBoxProps {
   
   const SearchBox = ({ search, setSearch }: SearchBoxProps) => {
     return (
-      <div className="w-1/2 flex flex-col justify-center px-6">
+      <div className="flex flex-col justify-center px-6">
         <h2 className="text-2xl font-medium text-white mb-4">Cari komoditas di sini</h2>
         <input
           type="text"

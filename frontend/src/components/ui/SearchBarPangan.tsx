@@ -13,19 +13,26 @@ const SearchBarInformasi = () => {
   const [commodity, setCommodity] = useState("Beras");
   const [marketType, setMarketType] = useState("Pasar Tradisional");
 
-  
-
   return (
-    <div className="h-[220px] bg-[#4FAD5B] rounded-lg flex p-6 shadow-lg">
-      {/* Search Box */}
-      <SearchBox search={search} setSearch={setSearch} />
+    <div className="bg-[#4FAD5B] rounded-lg p-6 shadow-lg max-w-[1000px] mx-auto">
+      {/* Wrapper untuk isi */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        {/* SearchBox */}
+        <div className="md:w-1/2">
+          <SearchBox search={search} setSearch={setSearch} />
+        </div>
 
-      {/* Other Inputs */}
-      <div className="w-1/2 grid grid-cols-2 gap-4">
-        <DatePicker date={date} setDate={setDate} />
-        <CommoditySelector commodity={commodity} setCommodity={setCommodity} />
-        <RegionSelector region={region} setRegion={setRegion} />
-        <MarketTypeSelector marketType={marketType} setMarketType={setMarketType} />
+        {/* Input */}
+        <div className="px-6 md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <DatePicker date={date} setDate={setDate} />
+          <CommoditySelector commodity={commodity} setCommodity={setCommodity} />
+          <RegionSelector region={region} setRegion={setRegion} />
+          <MarketTypeSelector marketType={marketType} setMarketType={setMarketType} />
+        </div>
+      </div>
+
+      {/* Button */}
+      <div className="px-6 flex justify-end mt-4">
         <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition">
           Lihat Grafik
         </button>
