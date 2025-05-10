@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
 import SearchBarGrafik from "@/components/ui/SearchBarGrafik";
 import Grafik from "@/components/ui/Grafik";
 
