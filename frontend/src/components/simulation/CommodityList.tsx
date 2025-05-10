@@ -7,14 +7,27 @@ import { Commodity } from "../commodity/commodity";
 
 interface CommodityListProps {
     onChange: (selected: Commodity[]) => void;
+    setIsLoading: (value: boolean) => void;
 }
 
-export default function CommodityList({onChange}: CommodityListProps) {
+export default function CommodityList({onChange, setIsLoading}: CommodityListProps) {
     const [commodities, setCommodities] = useState<Commodity[]>([]);
     const [quantities, setQuantities] = useState<Record<number, number>>({});
 
+
     useEffect(() => {
-        fetchAndMapKomoditas().then(setCommodities);
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchAndMapKomoditas();
+                setCommodities(data);
+            } catch (error) {
+                alert("gagal memuat data");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
     useEffect(() => {
