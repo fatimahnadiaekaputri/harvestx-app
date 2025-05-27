@@ -1,123 +1,112 @@
-import { useState, useEffect } from "react";
-import { X } from "lucide-react";
-import { Line } from "react-chartjs-2";
+import { useEffect, useState } from "react";
 import {
-  Chart as ChartJS,       // <- Import base Chart from chart.js
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
   Tooltip,
-  Legend,
-} from "chart.js";
+} from "recharts";
+import { X } from "lucide-react";
 
-// Register the necessary components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-
-
-// Interface untuk mendefinisikan struktur data
-interface FaktaKomoditas {
-  harga: number;
-  waktu: {
-    tanggal: string;
-  };
-}
-
-interface KomoditasPopupCardProps {
-  komoditas: string;
-  onClose: () => void;
-}
-
-const KomoditasPopupCard = ({ komoditas, onClose }: KomoditasPopupCardProps) => {
-  const [historis, setHistoris] = useState<FaktaKomoditas[]>([]);
-  const [prediksi, setPrediksi] = useState<FaktaKomoditas[]>([]);
-  const [hargaSekarang, setHargaSekarang] = useState<number>(0);
-  const [hargaTertinggi, setHargaTertinggi] = useState<number>(0);
-  const [hargaTerendah, setHargaTerendah] = useState<number>(0);
+const KomoditasPopupCard = ({ selectedKomoditas, selectedDate, onClose }: any) => {
+  const [historis, setHistoris] = useState<any[]>([]);
+  const [prediksi, setPrediksi] = useState<any[]>([]);
+  const [hargaHariIni, setHargaHariIni] = useState(0);
+  const [hargaTertinggi, setHargaTertinggi] = useState<any>({ harga: 0, tanggal: "-" });
+  const [hargaTerendah, setHargaTerendah] = useState<any>({ harga: 0, tanggal: "-" });
 
   useEffect(() => {
-    fetch(`/api/fakta_komoditas/${komoditas}`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) {
-          const allData: FaktaKomoditas[] = json.data;
-          const historicalData = allData.slice(0, 30);
-          const predictedData = allData.slice(30);
+    if (!selectedKomoditas || !selectedDate) return;
 
-          setHistoris(historicalData);
-          setPrediksi(predictedData);
+    console.log("Fetching data for:", selectedKomoditas, "on date:", selectedDate);
 
-          setHargaSekarang(historicalData[historicalData.length - 1]?.harga || 0);
-          setHargaTerendah(Math.min(...predictedData.map((d) => d.harga)));
-          setHargaTertinggi(Math.max(...predictedData.map((d) => d.harga)));
-        }
-      });
-  }, [komoditas]);
+    // Dummy data untuk testing (ini bisa diganti fetch API kalau backend sudah siap)
+    const historicalData = [
+      { tanggal: "2025-05-01", harga: 1000 },
+      { tanggal: "2025-05-02", harga: 1050 },
+      { tanggal: "2025-05-03", harga: 1020 },
+      { tanggal: "2025-05-04", harga: 1100 },
+      { tanggal: "2025-05-05", harga: 1080 },
+    ];
 
-  const chartData = {
-    labels: [
-      ...historis.map((d) => d.waktu.tanggal),
-      ...prediksi.map((d) => d.waktu.tanggal),
-    ],
-    datasets: [
-      {
-        label: "Historis",
-        data: historis.map((d) => d.harga),
-        borderColor: "rgba(59, 130, 246, 0.7)",
-        fill: false,
-      },
-      {
-        label: "Prediksi",
-        data: prediksi.map((d) => d.harga),
-        borderColor: "rgba(239, 68, 68, 0.7)",
-        fill: false,
-      },
-    ],
-  };
+    const predictedData = [
+      { tanggal: "2025-05-06", harga: 1120 },
+      { tanggal: "2025-05-07", harga: 1140 },
+      { tanggal: "2025-05-08", harga: 1130 },
+      { tanggal: "2025-05-09", harga: 1150 },
+      { tanggal: "2025-05-10", harga: 1160 },
+    ];
+
+    setHistoris(historicalData);
+    setPrediksi(predictedData);
+
+    // Set harga hari ini (harga terakhir dari historical)
+    setHargaHariIni(historicalData[historicalData.length - 1]?.harga || 0);
+
+    // Cari harga tertinggi dan terendah dari prediksi
+    const highest = predictedData.reduce((prev, curr) =>
+      prev.harga > curr.harga ? prev : curr
+    );
+    const lowest = predictedData.reduce((prev, curr) =>
+      prev.harga < curr.harga ? prev : curr
+    );
+
+    setHargaTertinggi(highest);
+    setHargaTerendah(lowest);
+
+  }, [selectedKomoditas, selectedDate]);
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white w-[80%] h-[80%] rounded-xl p-6 relative">
+      <Card className="w-[90%] h-[90%] relative">
         <button onClick={onClose} className="absolute top-4 right-4">
           <X size={24} />
         </button>
 
-        <h2 className="text-2xl font-bold mb-4">{komoditas}</h2>
+        <CardHeader>
+          <CardTitle>Grafik Harga - {selectedDate} - {selectedKomoditas}</CardTitle>
+          <CardDescription>5 Hari Sebelum & 5 Hari Setelah</CardDescription>
+        </CardHeader>
 
-        <div className="h-[60%] mb-4">
-          <Line data={chartData} />
-        </div>
+        <CardContent>
+          <LineChart width={window.innerWidth * 0.8} height={300} data={[...historis, ...prediksi]}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="tanggal" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="harga" stroke="#8884d8" />
+          </LineChart>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 bg-gray-100 rounded-lg">
-            <p className="text-lg font-semibold">Harga Saat Ini</p>
-            <p className="text-xl">Rp {hargaSekarang.toLocaleString()}</p>
-            <p className="text-sm text-right">Hari Ini</p>
+          <div className="grid grid-cols-3 gap-4 mt-4">
+            <div className="p-4 bg-gray-100 rounded-lg">
+              <p className="text-lg font-semibold">Harga Hari Ini</p>
+              <p className="text-xl">Rp {hargaHariIni.toLocaleString()}</p>
+            </div>
+
+            <div className="p-4 bg-gray-100 rounded-lg">
+              <p className="text-lg font-semibold">Harga Terendah</p>
+              <p className="text-xl">Rp {hargaTerendah?.harga?.toLocaleString() || 0}</p>
+              <p className="text-sm">Tanggal: {hargaTerendah?.tanggal || '-'}</p>
+            </div>
+
+            <div className="p-4 bg-gray-100 rounded-lg">
+              <p className="text-lg font-semibold">Harga Tertinggi</p>
+              <p className="text-xl">Rp {hargaTertinggi?.harga?.toLocaleString() || 0}</p>
+              <p className="text-sm">Tanggal: {hargaTertinggi?.tanggal || '-'}</p>
+            </div>
+
           </div>
-
-          <div className="p-4 bg-gray-100 rounded-lg">
-            <p className="text-lg font-semibold">Harga Terendah Prediksi</p>
-            <p className="text-xl">Rp {hargaTerendah.toLocaleString()}</p>
-            <p className="text-sm text-right">5 Hari Ke Depan</p>
-          </div>
-
-          <div className="p-4 bg-gray-100 rounded-lg">
-            <p className="text-lg font-semibold">Harga Tertinggi Prediksi</p>
-            <p className="text-xl">Rp {hargaTertinggi.toLocaleString()}</p>
-            <p className="text-sm text-right">5 Hari Ke Depan</p>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
