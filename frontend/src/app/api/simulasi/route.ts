@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    let {id_komoditas, id_waktu, kota, jenis_pasar} = body;
+    const {id_komoditas, id_waktu, kota, jenis_pasar} = body;
 
     console.log("Body yang diterima:", body);
     console.log("id_komoditas:", id_komoditas);

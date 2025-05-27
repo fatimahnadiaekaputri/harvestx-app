@@ -6,14 +6,18 @@ import Button from "@/components/ui/CustomButton";
 import InputPasar from "@/components/ui/inputPasar";
 import InputTanggal from "@/components/ui/inputTanggal";
 import InputWilayah from "@/components/ui/inputWilayah";
+import Loader from "@/components/ui/loader";
 import { useState } from "react";
 
 export default function Simulation() {
     const [selectedDate, setSelectedDate] = useState("");
-    const [selectedRegion, setSelectedRegion] = useState("");
-    const [selectedMarketType, setSelectedMarketType] = useState("");
+    const [selectedRegion, setSelectedRegion] = useState("Kota Yogyakarta");
+    const [selectedMarketType, setSelectedMarketType] = useState("Pasar Tradisional");
     const [selectedCommodities, setSelectedComodities] = useState<Commodity[]>([]);
     const [updatedCommodities, setUpdatedCommodities] = useState<Commodity[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isCommodityLoading, setIsCommodityLoading] = useState(true);
+
 
     const handleSubmit = async () => {
         const commoditiesData = selectedCommodities.map((commodity) => ({
@@ -27,6 +31,9 @@ export default function Simulation() {
             alert("Lengkapi semua input!");
             return;
         }
+
+        setIsLoading(true);
+        
         const id_komoditas = selectedCommodities.map((c) => c.id_komoditas);
 
         try {
@@ -60,10 +67,21 @@ export default function Simulation() {
         } catch (err) {
             console.error(err);
             alert("Gagal ambil data");
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
+    <>
+    {(isLoading || isCommodityLoading) &&(
+        <div className="fixed inset-0 bg-white bg-opacity-80 z-50 flex items-center justify-center">
+             <Loader 
+                message={isCommodityLoading ? "Mengambil data komoditas..." : "Sedang dihitung..."}
+                subMessage={isCommodityLoading ? "Mohon tunggu sebentar" : "Tunggu yaa!"} 
+            />
+        </div>
+    )}
         <div className="min-h-screen bg-white">
             <div className="flex text-center font-semibold lg:text-4xl md:text-3xl text-2xl text-black justify-center mt-10">
                 Simulasi Anggaran Belanja
@@ -72,7 +90,7 @@ export default function Simulation() {
                 <div className="lg:text-2xl md:text-xl text-lg text-black font-medium mb-5">
                     Pilih Komoditas
                 </div>
-                <CommodityList onChange={setSelectedComodities}/>
+                <CommodityList onChange={setSelectedComodities} setIsLoading={setIsCommodityLoading}/>
                 <div className="mt-10 lg:text-2xl md:text-xl text-lg text-black font-medium">
                 Pilih Waktu, Wilayah, dan Jenis Pasar
                 </div>
@@ -98,7 +116,7 @@ export default function Simulation() {
                 <TableSimulation data={updatedCommodities} />
             </div>
         </div>
-
+    </>    
         
     )
 }
