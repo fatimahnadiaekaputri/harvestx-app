@@ -54,7 +54,7 @@ export default function CommodityList({ onChange, setIsLoading }: CommodityListP
     .join(", ");
 
   return (
-    <div className="bg-green-500 p-8 rounded-lg">
+    <div className="bg-[#3A7D44] p-8 rounded-lg">
       <div className="max-h-[400px] overflow-y-auto pr-2">
         <div className="grid lg:grid-cols-2 gap-4">
           {commodities.map((commodity, index) => (
