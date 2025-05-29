@@ -53,7 +53,6 @@ const KomoditasPopupCard = ({
   const [data, setData] = useState<DataPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hargaHariIni, setHargaHariIni] = useState(0);
   const [hargaTertinggi, setHargaTertinggi] = useState<DataPoint | null>(null);
   const [hargaTerendah, setHargaTerendah] = useState<DataPoint | null>(null);
 
@@ -85,13 +84,7 @@ const KomoditasPopupCard = ({
         setData(result.data);
 
         // Calculate statistics
-        const historicalData = result.data.filter(item => item.type === 'historical');
         const predictionData = result.data.filter(item => item.type === 'prediction');
-
-        // Set current price (last historical data point)
-        if (historicalData.length > 0) {
-          setHargaHariIni(historicalData[historicalData.length - 1].harga);
-        }
 
         // Find highest and lowest from predictions
         if (predictionData.length > 0) {
@@ -129,7 +122,7 @@ const KomoditasPopupCard = ({
       return (
         <div className="bg-white p-3 border rounded-lg shadow-lg">
           <p className="font-semibold">{`${label}`}</p>
-          <p className="text-blue-600">
+          <p className={data.type === 'historical' ? 'text-blue-600' : 'text-red-600'}>
             {`Harga: Rp ${payload[0].value.toLocaleString()}`}
           </p>
           <p className="text-sm text-gray-500">
@@ -141,10 +134,23 @@ const KomoditasPopupCard = ({
     return null;
   };
 
-  // Format chart data for display
-  const chartData = data.map(item => ({
+  // Prepare chart data with separate series for historical and prediction
+  const historicalData = data.filter(item => item.type === 'historical').map(item => ({
     ...item,
     harga: Math.round(item.harga)
+  }));
+
+  const predictionData = data.filter(item => item.type === 'prediction').map(item => ({
+    ...item,
+    harga: Math.round(item.harga)
+  }));
+
+  // Combine data for chart with proper ordering
+  const chartData = data.map(item => ({
+    ...item,
+    harga: Math.round(item.harga),
+    historicalHarga: item.type === 'historical' ? Math.round(item.harga) : null,
+    predictionHarga: item.type === 'prediction' ? Math.round(item.harga) : null
   }));
 
   if (loading) {
@@ -213,28 +219,28 @@ const KomoditasPopupCard = ({
                 <Tooltip content={<CustomTooltip />} />
                 <Line 
                   type="monotone" 
-                  dataKey="harga" 
-                  stroke="#8884d8" 
+                  dataKey="historicalHarga" 
+                  stroke="#2563eb" 
                   strokeWidth={2}
-                  dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
+                  dot={{ fill: '#2563eb', strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6 }}
+                  connectNulls={false}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="predictionHarga" 
+                  stroke="#dc2626" 
+                  strokeWidth={2}
+                  dot={{ fill: '#dc2626', strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6 }}
+                  connectNulls={false}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg border">
-              <p className="text-sm font-medium text-gray-600 mb-1">Harga Saat Ini</p>
-              <p className="text-xl font-bold text-blue-600">
-                Rp {hargaHariIni.toLocaleString()}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Data terakhir tersedia
-              </p>
-            </div>
-
+          {/* Statistics Cards - Only Prediction Data */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-green-50 rounded-lg border">
               <p className="text-sm font-medium text-gray-600 mb-1">Prediksi Terendah</p>
               <p className="text-xl font-bold text-green-600">
@@ -259,8 +265,12 @@ const KomoditasPopupCard = ({
           {/* Legend */}
           <div className="flex flex-wrap gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-500 rounded"></div>
-              <span>Data Historis & Prediksi</span>
+              <div className="w-4 h-4 bg-blue-600 rounded"></div>
+              <span>Data Historis</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-red-600 rounded"></div>
+              <span>Data Prediksi</span>
             </div>
             <div className="text-gray-600">
               Total {data.length} data points | 
