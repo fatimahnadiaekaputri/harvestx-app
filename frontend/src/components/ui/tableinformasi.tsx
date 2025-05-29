@@ -120,15 +120,19 @@ const TableInformation = ({ selectedKomoditas, selectedDate }: TableInformationP
     setSelectedRowKomoditas(null);
   };
 
-  // Get trend indicator
-  const getTrendIndicator = (trend: "up" | "down" | "neutral") => {
-    switch (trend) {
-      case "up":
-        return <span className="text-green-300">↗️</span>;
-      case "down":
-        return <span className="text-red-300">↘️</span>;
-      default:
-        return <span className="text-gray-300">→</span>;
+  // Format tanggal prediksi
+  const formatPredictionDate = (dateString?: string) => {
+    if (!dateString) return "-";
+    
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    } catch (error) {
+      return "-";
     }
   };
 
@@ -160,7 +164,7 @@ const TableInformation = ({ selectedKomoditas, selectedDate }: TableInformationP
             <th className="p-4 h-16 text-left rounded-tl-lg rounded-bl-lg">Nama Komoditas</th>
             <th className="p-4 h-16 text-center">Harga Saat Ini*</th>
             <th className="p-4 h-16 text-center">Prediksi Harga Terbaik**</th>
-            <th className="p-4 h-16 text-center">Trend</th>
+            <th className="p-4 h-16 text-center">Tanggal Prediksi</th>
           </tr>
         </thead>
 
@@ -181,8 +185,8 @@ const TableInformation = ({ selectedKomoditas, selectedDate }: TableInformationP
                 <td className="p-4 h-16 text-white text-center">
                   Rp {item.prediction.toLocaleString()}
                 </td>
-                <td className="p-4 h-16 text-center">
-                  {getTrendIndicator(item.trend)}
+                <td className="p-4 h-16 text-white text-center">
+                  {formatPredictionDate(item.predictionDate)}
                 </td>
               </tr>
             ))
@@ -205,10 +209,7 @@ const TableInformation = ({ selectedKomoditas, selectedDate }: TableInformationP
           ** Prediksi dalam kg
         </p>
         <p className="text-xs text-gray-200">
-          Total: {data.length} komoditas | 
-          Naik: {data.filter(d => d.trend === 'up').length} | 
-          Turun: {data.filter(d => d.trend === 'down').length} | 
-          Stabil: {data.filter(d => d.trend === 'neutral').length}
+          Total: {data.length} komoditas
         </p>
       </div>
     </div>
