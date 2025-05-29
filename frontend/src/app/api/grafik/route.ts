@@ -3,7 +3,14 @@ import { subMonths, addDays, format, startOfMonth, endOfMonth, isSameMonth, isSa
 import { id } from 'date-fns/locale'
 import { NextRequest, NextResponse } from 'next/server';
 
-const prisma = new PrismaClient()
+// Singleton Prisma Client - hanya buat satu instance
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 type KomoditasKey = 
   | "bawang_merah" 
@@ -17,13 +24,27 @@ type KomoditasKey =
   | "sawi" 
   | "tomat"
 
+// Model mapping untuk menghindari repetitive code
+const modelMap = {
+  bawang_merah: prisma.bawang_merah,
+  bawang_putih: prisma.bawang_putih,
+  beras: prisma.beras,
+  cabai: prisma.cabai,
+  kangkung: prisma.kangkung,
+  kedelai: prisma.kedelai,
+  kentang: prisma.kentang,
+  ketimun: prisma.ketimun,
+  sawi: prisma.sawi,
+  tomat: prisma.tomat
+} as const;
+
 // Helper function to get historical data for a commodity
 async function getHistoricalData(komoditas: KomoditasKey, startDate: Date, endDate: Date) {
-  let data: any[] = [];
-  
-  // Use explicit calls to avoid union type issues
-  if (komoditas === "bawang_merah") {
-    data = await prisma.bawang_merah.findMany({
+  try {
+    // Type assertion to bypass the union type issue - sama seperti API informasi
+    const model = modelMap[komoditas] as any;
+    
+    const data = await model.findMany({
       where: {
         waktu: {
           tanggal: {
@@ -35,126 +56,12 @@ async function getHistoricalData(komoditas: KomoditasKey, startDate: Date, endDa
       include: { waktu: true },
       orderBy: { waktu: { tanggal: 'asc' } }
     });
-  } else if (komoditas === "bawang_putih") {
-    data = await prisma.bawang_putih.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "beras") {
-    data = await prisma.beras.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "cabai") {
-    data = await prisma.cabai.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "kangkung") {
-    data = await prisma.kangkung.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "kedelai") {
-    data = await prisma.kedelai.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "kentang") {
-    data = await prisma.kentang.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "ketimun") {
-    data = await prisma.ketimun.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "sawi") {
-    data = await prisma.sawi.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
-  } else if (komoditas === "tomat") {
-    data = await prisma.tomat.findMany({
-      where: {
-        waktu: {
-          tanggal: {
-            gte: startDate,
-            lte: endDate
-          }
-        }
-      },
-      include: { waktu: true },
-      orderBy: { waktu: { tanggal: 'asc' } }
-    });
+    
+    return data;
+  } catch (error) {
+    console.error(`Error fetching historical data for ${komoditas}:`, error);
+    return []; // Return empty array if error
   }
-  
-  return data;
 }
 
 // Helper function to aggregate data by month
@@ -216,27 +123,34 @@ export async function POST(req: NextRequest) {
     // Aggregate by month
     const monthlyData = aggregateByMonth(historicalData);
     
-    // Get predictions for next 5 days
-    const whereClause: any = {};
-    whereClause.komoditas = komoditas;
+    // Get predictions for next 5 days dengan error handling
+    let predictionData: any[] = [];
     
-    const prediksi = await prisma.simulasi_prediksi.findMany({
-      where: whereClause,
-      orderBy: { id: 'asc' },
-      take: 5
-    });
-    
-    // Format prediction data
-    const predictionData = prediksi.map((p, index) => {
-      const futureDate = addDays(today, index + 1);
-      return {
-        period: format(futureDate, 'dd MMM', { locale: id }),
-        periodKey: format(futureDate, 'yyyy-MM-dd'),
-        harga: Number(p.harga_prediksi ?? 0),
-        type: 'prediction' as const,
-        date: futureDate
-      };
-    });
+    try {
+      const prediksi = await prisma.simulasi_prediksi.findMany({
+        where: {
+          komoditas: komoditas
+        },
+        orderBy: { id: 'asc' },
+        take: 5
+      });
+      
+      // Format prediction data
+      predictionData = prediksi.map((p, index) => {
+        const futureDate = addDays(today, index + 1);
+        return {
+          period: format(futureDate, 'dd MMM', { locale: id }),
+          periodKey: format(futureDate, 'yyyy-MM-dd'),
+          harga: Number(p.harga_prediksi ?? 0),
+          type: 'prediction' as const,
+          date: futureDate
+        };
+      });
+    } catch (error) {
+      console.error(`Error fetching predictions for ${komoditas}:`, error);
+      // Jika prediksi gagal, tetap lanjutkan dengan data historis saja
+      predictionData = [];
+    }
     
     // Combine historical and prediction data
     const combinedData = [...monthlyData, ...predictionData];
@@ -256,26 +170,38 @@ export async function POST(req: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error fetching chart data:', error);
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
 // Optional: Also support GET method for testing
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const komoditas = searchParams.get('komoditas');
-  
-  if (!komoditas) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const komoditas = searchParams.get('komoditas');
+    
+    if (!komoditas) {
+      return NextResponse.json({ 
+        message: 'Please use POST method with komoditas in body, or add ?komoditas=nama_komoditas for testing',
+        example: '?komoditas=beras'
+      });
+    }
+    
+    // Convert GET to POST-like behavior for testing
+    const mockRequest = {
+      json: async () => ({ komoditas })
+    };
+    
+    return POST(mockRequest as any);
+  } catch (error) {
+    console.error('Error in GET method:', error);
     return NextResponse.json({ 
-      message: 'Please use POST method with komoditas in body, or add ?komoditas=nama_komoditas for testing' 
-    });
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
-  
-  // Convert GET to POST-like behavior for testing
-  const mockRequest = {
-    json: async () => ({ komoditas })
-  };
-  
-  return POST(mockRequest as any);
 }
