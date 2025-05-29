@@ -1,5 +1,4 @@
 import SearchBarGrafik from "@/components/ui/SearchBarGrafik";
-import Grafik from "@/components/ui/Grafik";
 
 export default function InformasiPage() {
   return (
@@ -7,7 +6,6 @@ export default function InformasiPage() {
       <h1 className="text-center text-2xl font-bold">Grafik Harga Pangan</h1>
       <div className="mt-4">
         <SearchBarGrafik />
-        <Grafik />
       </div>
     </div>
   );

@@ -18,10 +18,6 @@ export default function InformasiPage() {
       <h1 className="text-center text-2xl font-bold">Informasi Harga Pangan</h1>
 
       <div className="mt-4">
-        <SearchBarInformasi onSearch={handleSearch} />
-      </div>
-
-      <div className="mt-4">
         <TableInformation 
           selectedKomoditas={selectedKomoditas}
           selectedDate={selectedDate}
