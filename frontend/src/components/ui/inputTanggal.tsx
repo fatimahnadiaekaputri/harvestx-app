@@ -1,18 +1,15 @@
+import { DateTime } from "luxon";
+
 interface DatePickerProps {
   date: string;
   setDate: (value: string) => void;
 }
 
 const InputTanggal = ({ date, setDate }: DatePickerProps) => {
-  const today = new Date();
-  const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 1); // Mulai dari besok
+  const todayJakarta = DateTime.now().setZone("Asia/Jakarta");
 
-  const maxDate = new Date(today);
-  maxDate.setDate(today.getDate() + 5); // Sampai 5 hari dari sekarang
-
-  // Format YYYY-MM-DD (mengikuti format HTML input type="date") dalam zona waktu lokal
-  const formatDate = (d: Date) => d.toLocaleDateString("en-CA");
+  const minDate = todayJakarta.plus({ days: 1 }).toFormat("yyyy-MM-dd");
+  const maxDate = todayJakarta.plus({ days: 5 }).toFormat("yyyy-MM-dd");
 
   return (
     <div className="relative w-full">
@@ -24,8 +21,8 @@ const InputTanggal = ({ date, setDate }: DatePickerProps) => {
         className="pl-3 pr-2 pt-6 pb-2 text-base bg-white border border-black rounded-lg focus:outline-none w-full shadow-md"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        min={formatDate(minDate)}
-        max={formatDate(maxDate)}
+        min={minDate}
+        max={maxDate}
       />
     </div>
   );
