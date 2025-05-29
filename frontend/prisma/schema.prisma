@@ -85,6 +85,7 @@ model sawi {
 model simulasi_prediksi {
   id             Int      @id @default(autoincrement())
   harga_prediksi Decimal? @db.Decimal(10, 2)
+  komoditas      String?  @db.VarChar(50)
 }
 
 model tomat {
