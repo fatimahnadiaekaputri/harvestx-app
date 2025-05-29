@@ -1,26 +1,37 @@
+import { Commodity } from "./commodity";
+
 const iconMapping: { [key: string]: string } = {
-    "Beras": "🍚",
-    "Jagung": "🌽",
-    "Cabai Merah": "🌶️",
-    "Tomat": "🍅"
+  beras: "🍚",
+  bawang_merah: "🧅",
+  bawang_putih: "🧄",
+  cabai: "🌶️",
+  kangkung: "🥬",
+  kedelai: "🫘",
+  kentang: "🥔",
+  ketimun: "🥒",
+  sawi: "🥗",
+  tomat: "🍅",
 };
 
-export async function fetchAndMapKomoditas() {
-    try {
-        const response = await fetch("/api/komoditas");
-        const data = await response.json();
+const displayNameMapping: { [key: string]: string } = {
+  beras: "Beras",
+  bawang_merah: "Bawang Merah",
+  bawang_putih: "Bawang Putih",
+  cabai: "Cabai",
+  kangkung: "Kangkung",
+  kedelai: "Kedelai",
+  kentang: "Kentang",
+  ketimun: "Ketimun",
+  sawi: "Sawi",
+  tomat: "Tomat",
+};
 
-        if (data.success) {
-            return data.data.map((item: any) => ({
-                id_komoditas: item.id_komoditas,
-                nama_komoditas: item.nama_komoditas,  
-                kategori: item.kategori,
-                icon: iconMapping[item.nama_komoditas] || "❓"
-            }));
-        }
-    } catch (error) {
-        console.error("Error fetching komoditas:", error);
-    }
+export async function fetchAndMapKomoditas(): Promise<Commodity[]> {
+  const komoditasList = Object.keys(iconMapping);
 
-    return [];
+  return komoditasList.map((id_komoditas) => ({
+    id_komoditas,
+    nama_komoditas: displayNameMapping[id_komoditas] || id_komoditas,
+    icon: iconMapping[id_komoditas] || "❓",
+  }));
 }

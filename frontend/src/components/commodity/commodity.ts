@@ -1,9 +1,9 @@
 export interface Commodity {
-    id_komoditas: number;
+    id_komoditas: string;
     nama_komoditas: string;
     icon: string;
-    price: number;
-    quantity: number;
-    total: number;
-    trend: "up" | "down";
-}
+    quantity?: number;
+    price?: number; 
+    total?: number;
+  }
+  

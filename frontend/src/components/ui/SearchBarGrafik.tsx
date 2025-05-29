@@ -18,7 +18,7 @@ const SearchBarGrafik = () => {
 
   return (
     <>
-      <div className="bg-[#4FAD5B] rounded-lg p-6 shadow-lg max-w-[1000px] mx-auto">
+      <div className="bg-[#4FAD5B] rounded-lg p-6 shadow-lg w-full max-w-[1000px] mx-auto">
         {/* Wrapper untuk isi */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           {/* Komoditas Selector */}

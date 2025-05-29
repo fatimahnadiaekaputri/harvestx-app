@@ -5,8 +5,8 @@ interface TableSimulationProps {
     data: Commodity[];
 }
 
-export default function TableSimulation ({data}: TableSimulationProps) {
-    const totalBelanja: number = data.reduce((acc, item) => acc + item.total, 0);
+export default function TableSimulation({ data }: TableSimulationProps) {
+    const totalBelanja: number = data.reduce((acc, item) => acc + (item.total ?? 0), 0);
 
     return (
         <div className="bg-[#4FAD5B] p-4 rounded-lg text-white">
@@ -20,18 +20,24 @@ export default function TableSimulation ({data}: TableSimulationProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((item, index) => (
-                        <TableRow key={index} className="md:text-lg text-sm border-none">
-                            <TableCell className="p-4">
-                                {item.icon} {item.nama_komoditas}
-                            </TableCell>
-                            <TableCell className="p-4">
-                                {item.trend === "up" ? "🔼" : "🔽"} Rp{item.price.toLocaleString()}
-                            </TableCell>
-                            <TableCell className="p-4">{item.quantity}</TableCell>
-                            <TableCell className="p-4">Rp{item.total.toLocaleString()}</TableCell>
-                        </TableRow>
-                    ))}
+                    {data.map((item, index) => {
+                        const price = item.price ?? 0;
+                        const total = item.total ?? 0;
+                        const quantity = item.quantity ?? 0;
+
+                        return (
+                            <TableRow key={index} className="md:text-lg text-sm border-none">
+                                <TableCell className="p-4">
+                                    {item.icon} {item.nama_komoditas}
+                                </TableCell>
+                                <TableCell className="p-4">
+                                    Rp{price.toLocaleString()}
+                                </TableCell>
+                                <TableCell className="p-4">{quantity}</TableCell>
+                                <TableCell className="p-4">Rp{total.toLocaleString()}</TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </TableBody>
                 <TableFooter className="border-none">
                     <TableRow>
@@ -43,5 +49,5 @@ export default function TableSimulation ({data}: TableSimulationProps) {
                 </TableFooter>
             </Table>
         </div>
-    )
+    );
 }
