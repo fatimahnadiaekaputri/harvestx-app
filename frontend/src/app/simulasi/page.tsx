@@ -18,105 +18,131 @@ export default function Simulation() {
     const [isLoading, setIsLoading] = useState(false);
     const [isCommodityLoading, setIsCommodityLoading] = useState(true);
 
+    // Multiplier berdasarkan kota dan jenis pasar
+    const regionMultiplier: Record<string, number> = {
+        "Kota Yogyakarta": 1.10,
+        "Kabupaten Sleman": 1.05,
+        "Kabupaten Bantul": 1.00,
+    };
+
+    const marketTypeMultiplier: Record<string, number> = {
+        "Pasar Tradisional": 1.00,
+        "Supermarket": 1.20,
+    };
+
+    // Fungsi untuk menghitung hari ke-N dari hari ini
+    const calculateHariKeN = (tanggal: string): number => {
+        const today = new Date();
+        const selected = new Date(tanggal);
+        const diffTime = selected.getTime() - today.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays + 1; // hari ke-1 = hari ini
+    };
 
     const handleSubmit = async () => {
-        const commoditiesData = selectedCommodities.map((commodity) => ({
-            id_komoditas: commodity.id_komoditas,
-            quantity: commodity.quantity,
-            total: commodity.price * commodity.quantity,
-
-        }))
-
-        if (commoditiesData.length === 0 || !selectedDate || !selectedRegion || !selectedMarketType) {
+        if (selectedCommodities.length === 0 || !selectedDate) {
             alert("Lengkapi semua input!");
             return;
         }
 
         setIsLoading(true);
-        
-        const id_komoditas = selectedCommodities.map((c) => c.id_komoditas);
+
+        const komoditas = selectedCommodities.map(c => c.id_komoditas);
+        const hari = calculateHariKeN(selectedDate);
 
         try {
             const response = await fetch("/api/simulasi", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    id_komoditas,
-                    id_waktu: parseInt(selectedDate.split("-").join(""), 10),
-                    kota: selectedRegion,
-                    jenis_pasar: selectedMarketType,
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ komoditas, hari }),
             });
 
-            const data = await response.json();
-            console.log("Hasil respons: ", data);
+            const res = await response.json();
+            const data = res.data;
 
-            const updatedCommodities = selectedCommodities.map((commodity) => {
-                const match = data.find(
-                    (item: any) => item.nama_komoditas === commodity.nama_komoditas
-                );
-                const price = match ? parseFloat(match.harga) : 0;
+            const regionMulti = regionMultiplier[selectedRegion] || 1;
+            const marketMulti = marketTypeMultiplier[selectedMarketType] || 1;
+            const finalMultiplier = regionMulti * marketMulti;
+
+            const updated = selectedCommodities.map(commodity => {
+                const match = data.find((item: any) => item.komoditas === commodity.id_komoditas);
+                const hargaDasar = match ? Number(match.harga) : 0;
+                const hargaFinal = hargaDasar * finalMultiplier;
                 return {
                     ...commodity,
-                    price: price,
-                    total: price * commodity.quantity,
+                    price: hargaFinal,
+                    total: hargaFinal * (commodity.quantity ?? 0),
                 };
             });
-            setUpdatedCommodities(updatedCommodities);
-            console.log(updatedCommodities);
+
+            setUpdatedCommodities(updated);
         } catch (err) {
             console.error(err);
-            alert("Gagal ambil data");
+            alert("Gagal mengambil data dari API.");
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     return (
-    <>
-    {(isLoading || isCommodityLoading) &&(
-        <div className="fixed inset-0 bg-white bg-opacity-80 z-50 flex items-center justify-center">
-             <Loader 
-                message={isCommodityLoading ? "Mengambil data komoditas..." : "Sedang dihitung..."}
-                subMessage={isCommodityLoading ? "Mohon tunggu sebentar" : "Tunggu yaa!"} 
-            />
-        </div>
-    )}
-        <div className="min-h-screen bg-white">
-            <div className="flex text-center font-semibold lg:text-4xl md:text-3xl text-2xl text-black justify-center mt-10">
-                Simulasi Anggaran Belanja
-            </div>
-            <div className="mt-10 lg:mx-20 mx-8">
-                <div className="lg:text-2xl md:text-xl text-lg text-black font-medium mb-5">
-                    Pilih Komoditas
+        <>
+            {(isLoading || isCommodityLoading) && (
+                <div className="fixed inset-0 bg-white bg-opacity-80 z-50 flex items-center justify-center">
+                    <Loader
+                        message={isCommodityLoading ? "Mengambil data komoditas..." : "Sedang dihitung..."}
+                        subMessage={isCommodityLoading ? "Mohon tunggu sebentar" : "Tunggu yaa!"}
+                    />
                 </div>
-                <CommodityList onChange={setSelectedComodities} setIsLoading={setIsCommodityLoading}/>
-                <div className="mt-10 lg:text-2xl md:text-xl text-lg text-black font-medium">
-                Pilih Waktu, Wilayah, dan Jenis Pasar
+            )}
+            <div className="min-h-screen bg-white">
+                <div className="flex text-center font-semibold lg:text-4xl md:text-3xl text-2xl text-black justify-center mt-10">
+                    Simulasi Anggaran Belanja
                 </div>
-                <div className="flex lg:flex-row flex-col gap-5 mt-5">
-                    <div className="w-[250px]">
-                        <InputTanggal date={selectedDate} setDate={setSelectedDate} />
+                <div className="mt-10 lg:mx-20 mx-8">
+                    <div className="lg:text-2xl md:text-xl text-lg text-black font-medium mb-5">
+                        Pilih Komoditas
                     </div>
-                    <div className="w-[250px]">
-                        <InputWilayah region={selectedRegion} setRegion={setSelectedRegion} />
+                    <CommodityList onChange={setSelectedComodities} setIsLoading={setIsCommodityLoading} />
+                    <div className="mt-10 lg:text-2xl md:text-xl text-lg text-black font-medium">
+                        Pilih Waktu, Wilayah, dan Jenis Pasar
                     </div>
-                    <div className="w-[250px]">
-                        <InputPasar marketType={selectedMarketType} setMarketType={setSelectedMarketType} />
+                    <div className="flex lg:flex-row flex-col gap-5 mt-5">
+                        <div className="w-[250px]">
+                            <InputTanggal date={selectedDate} setDate={setSelectedDate} />
+                        </div>
+                        <div className="w-[250px]">
+                            <InputWilayah region={selectedRegion} setRegion={setSelectedRegion} />
+                        </div>
+                        <div className="w-[250px]">
+                            <InputPasar marketType={selectedMarketType} setMarketType={setSelectedMarketType} />
+                        </div>
+                    </div>
+                    <div className="flex mt-10 justify-end">
+                        <Button text="Coba Simulasi" className="md:w-60 md:h-15 w-40 h-10 items-center justify-center md:text-2xl text-lg font-semibold" onClick={handleSubmit} />
                     </div>
                 </div>
-                <div className="flex mt-10 justify-end">
-                        <Button text="Coba Simulasi" className="md:w-60 md:h-15 w-40 h-10 items-center justify-center md:text-2xl text-lg font-semibold" onClick={handleSubmit}/>
-                </div>
-            </div>
-            <div className="pt-10 lg:mx-20 mx-8 pb-10">
-                <div className="text-black font-medium lg:text-2xl md:text-xl text-l mb-5">
+                <div className="pt-10 lg:mx-20 mx-8 pb-10">
+                <div className="text-black font-medium lg:text-2xl md:text-xl text-l mb-2">
                     Rincian Hasil Simulasi Anggaran Belanja
                 </div>
-                <TableSimulation data={updatedCommodities} />
+                    {updatedCommodities.length === 0 ? (
+                    <div className="text-gray-600 italic text-base md:text-lg text-center mt-20 mb-10">
+                        Pilih komoditas dan tanggal prediksi untuk mendapatkan simulasi anggaran belanja.
+                    </div>
+                 ) : (
+                <>
+                 <div className="text-black text-base md:text-lg mb-5">
+                    Rencana Anggaran Belanja untuk tanggal <span className="font-semibold">{selectedDate}</span><br />
+                <span className="italic">
+                    Lihat berapa kira-kira isi keranjang belanjamu hari itu! Kami udah hitung berdasarkan harga yang disesuaikan sama wilayah dan jenis pasar pilihanmu. Yuk cek, jangan sampai dompet kaget!
+                </span>
+                </div>
+            <TableSimulation data={updatedCommodities} />
+        </>
+    )}
+</div>
+
             </div>
-        </div>
-    </>    
-        
-    )
+        </>
+    );
 }

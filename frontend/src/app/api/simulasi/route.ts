@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { barang } = body;
+    const { komoditas, hari } = body;
 
-    if (!barang?.length) {
+    if (!komoditas || !Array.isArray(komoditas) || komoditas.length === 0 || !hari || hari <= 0) {
       return NextResponse.json(
-        { error: "Harap kirimkan parameter: barang (array of { id, komoditas })" },
+        { error: "Harap kirimkan array komoditas dan hari (>= 1)" },
         { status: 400 }
       );
     }
@@ -19,32 +19,29 @@ export async function POST(req: NextRequest) {
       harga: number;
     }[] = [];
 
-    for (const item of barang) {
-      const { id, komoditas } = item;
+    for (const namaKomoditas of komoditas) {
+      const data = await prisma.simulasi_prediksi.findMany({
+        where: { komoditas: namaKomoditas },
+        orderBy: { id: "asc" },
+        skip: hari - 1,
+        take: 1,
+        select: {
+          id: true,
+          komoditas: true,
+          harga_prediksi: true,
+        },
+      });
 
-      if (!id || !komoditas) continue;
-
-      try {
-        const data = await prisma.simulasi_prediksi.findFirst({
-          where: {
-            id: Number(id),
-            komoditas,
-          },
-          select: {
-            harga_prediksi: true,
-          },
-        });
-
+      if (data.length) {
         result.push({
-          id: Number(id),
-          komoditas,
-          harga: Number(data?.harga_prediksi ?? 0),
+          id: data[0].id,
+          komoditas: data[0].komoditas ?? "",
+          harga: Number(data[0].harga_prediksi ?? 0),
         });
-      } catch (err) {
-        console.error(`Gagal ambil data id=${id} komoditas=${komoditas}`, err);
+      } else {
         result.push({
-          id: Number(id),
-          komoditas,
+          id: 0,
+          komoditas: namaKomoditas,
           harga: 0,
         });
       }

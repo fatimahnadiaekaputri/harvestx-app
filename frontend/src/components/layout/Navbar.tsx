@@ -6,10 +6,15 @@ import Button from "../ui/CustomButton";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { IoMenu, IoChevronDown, IoChevronUp } from "react-icons/io5"; // Gunakan icon menu
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [fiturIsOpen, fiturSetIsOpen] = useState({menu:false, fitur:false});
+    const router = useRouter();
+    const toInformation = () => {
+        router.push("/informasi");
+    }
 
     return (
         <nav className="bg-white shadow-md px-4 sm:px-6 lg:px-8 border-b border-gray-300">
@@ -35,7 +40,7 @@ const Navbar = () => {
 
                 {/* Tombol Lihat Harga (Desktop) */}
                 <div className="hidden lg:block ml-8">
-                    <Button text="Lihat Harga" variant="filled" color="green" />
+                    <Button text="Lihat Harga" variant="filled" color="green" onClick={toInformation}/>
                 </div>
 
                 {/* Button Menu untuk Mobile */}
@@ -67,7 +72,7 @@ const Navbar = () => {
                     </div>
                     <Link href="#" className="block py-2 text-black hover:text-[#4FAD5B] font-semibold">Profil</Link>
                     <div className="mt-4">
-                        <Button text="Lihat Harga" variant="filled" color="green" className="w-full" />
+                        <Button text="Lihat Harga" variant="filled" color="green" className="w-full" onClick={toInformation}/>
                     </div>
                 </div>
             )}
