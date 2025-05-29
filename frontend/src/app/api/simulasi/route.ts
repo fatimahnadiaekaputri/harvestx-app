@@ -2,61 +2,60 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
+  try {
     const body = await req.json();
-    const {id_komoditas, id_waktu, kota, jenis_pasar} = body;
+    const { barang } = body;
 
-    console.log("Body yang diterima:", body);
-    console.log("id_komoditas:", id_komoditas);
-    console.log("id_waktu:", id_waktu);
-    console.log("kota:", kota);
-    console.log("jenis_pasar:", jenis_pasar);
-
-
-    if(!id_komoditas?.length || !id_waktu || !kota || !jenis_pasar) {
-        return NextResponse.json({error: "Pilih waktu, wilayah, atau jenis pasar"}, {status:400}) 
+    if (!barang?.length) {
+      return NextResponse.json(
+        { error: "Harap kirimkan parameter: barang (array of { id, komoditas })" },
+        { status: 400 }
+      );
     }
 
-    try {
-        const lokasi = await prisma.lokasi.findFirst({
-            where: {
-                kota,
-                jenis_pasar
-            },
-            select: {
-                id_lokasi: true,
-            },
+    const result: {
+      id: number;
+      komoditas: string;
+      harga: number;
+    }[] = [];
+
+    for (const item of barang) {
+      const { id, komoditas } = item;
+
+      if (!id || !komoditas) continue;
+
+      try {
+        const data = await prisma.simulasi_prediksi.findFirst({
+          where: {
+            id: Number(id),
+            komoditas,
+          },
+          select: {
+            harga_prediksi: true,
+          },
         });
 
-        if(!lokasi) {
-            return NextResponse.json({error: 'Lokasi tidak ditemukan'}, {status: 404});
-        }
-
-        const data = await prisma.fakta_komoditas.findMany({
-            where: {
-                id_waktu: id_waktu,
-                id_komoditas: {
-                    in: id_komoditas,
-                },
-                id_lokasi: lokasi.id_lokasi
-            },
-            select: {
-                harga: true,
-                komoditas: {
-                    select: {
-                        nama_komoditas: true,
-                    }
-                }
-            }
+        result.push({
+          id: Number(id),
+          komoditas,
+          harga: Number(data?.harga_prediksi ?? 0),
         });
-
-        const result = data.map(item => ({
-            nama_komoditas: item.komoditas.nama_komoditas,
-            harga: item.harga,
-        }))
-
-        return NextResponse.json(result);
-    } catch(error) {
-        console.error(error);
-        return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
+      } catch (err) {
+        console.error(`Gagal ambil data id=${id} komoditas=${komoditas}`, err);
+        result.push({
+          id: Number(id),
+          komoditas,
+          harga: 0,
+        });
+      }
     }
+
+    return NextResponse.json({ data: result }, { status: 200 });
+  } catch (error) {
+    console.error("Terjadi kesalahan:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

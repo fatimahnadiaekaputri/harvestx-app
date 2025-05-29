@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import TableInformation from "@/components/ui/tableinformasi";
-import SearchBarInformasi from "@/components/ui/SearchBarPangan";
 
 export default function InformasiPage() {
   const [selectedKomoditas, setSelectedKomoditas] = useState<string | null>(null);
